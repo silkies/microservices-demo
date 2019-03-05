@@ -5,9 +5,6 @@ node("maven") {
 	stage('Compile') {
 		sh "mvn clean compile -Dtest=false -DfailIfNoTests=false"
 	}
-	stage('JaCoCo') {
-		sh ""
-	}
 	stage('SonarQube') {
 		sh "mvn sonar:sonar"
 	}
@@ -15,7 +12,7 @@ node("maven") {
 		sh "mvn clean test"
 	}
 	stage('Integration Tests') {
-		sh "mvn clean test"
+		sh "mvn clean verify -P integration-test"
 	}
 	stage('Build') {
 		sh "mvn clean install -Dtest=false -DfailIfNoTests=false"
