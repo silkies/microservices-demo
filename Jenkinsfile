@@ -6,16 +6,18 @@ node("maven") {
 		sh "mvn clean compile -Dtest=false -DfailIfNoTests=false"
 	}
 	stage('SonarQube') {
-		sh "mvn sonar:sonar"
+		withSonarQubeEnv('MySonarQubeServer') {
+      			sh "mvn sonar:sonar"
+    		}
 	}
 	stage('Unit Tests') {
 		sh "mvn clean test"
 	}
 	stage('Integration Tests') {
-		sh "mvn clean verify -P integration-test"
+		sh "mvn verify"
 	}
 	stage('Build') {
-		sh "mvn clean install -Dtest=false -DfailIfNoTests=false"
+		sh "mvn install -Dtest=false -DfailIfNoTests=false"
 	}
 	stage('Archive Artifacts') {
 		archiveArtifacts '/*'
